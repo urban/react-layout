@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
-import React from '../react/react';
+var React = require('react');
+require('./styles.css');
 
 var attrs = [
   'layout', 
@@ -118,4 +119,4 @@ Object.keys(React.DOM).forEach(function (tag) {
 
 React.DOM.injection.injectComponentClasses(Components);
 
-export default LayoutMixin;
+module.exports = LayoutMixin;

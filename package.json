@@ -1,0 +1,41 @@
+{
+  "name": "react-layout",
+  "version": "0.0.1",
+  "description": "Declarative flexbox layouts in React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urban/react-layout.git"
+  },
+  "keywords": [
+    "react",
+    "react-ui",
+    "react-component",
+    "widgets",
+    "flexbox"
+  ],
+  "author": "Urban Faubion <urban.faubion@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urban/react-layout/issues"
+  },
+  "homepage": "https://github.com/urban/react-layout",
+  "dependencies": {
+    "react": "^0.12.0"
+  },
+  "devDependencies": {
+    "autoprefixer-core": "^3.1.2",
+    "css-loader": "^0.9.0",
+    "extract-text-webpack-plugin": "^0.3.3",
+    "file-loader": "^0.8.1",
+    "jsx-loader": "^0.12.0",
+    "postcss-loader": "^0.1.0",
+    "style-loader": "^0.8.1",
+    "url-loader": "^0.5.5",
+    "webpack": "^1.4.10"
+  }
+}
