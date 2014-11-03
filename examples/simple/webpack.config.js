@@ -3,7 +3,7 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-  entry: './lib/index.jsx',
+  entry: './index.jsx',
   output: {
     path: './build',
     filename: 'bundle.js'
@@ -28,6 +28,9 @@ module.exports = {
       new ExtractTextPlugin("bundle.css")
   ],
   resolve: {
+    alias: {
+      'react$': require.resolve('../../node_modules/react')
+    },
     extensions: ['', '.js', '.jsx']
   },
   externals: [
