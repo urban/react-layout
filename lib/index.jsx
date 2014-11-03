@@ -3,6 +3,7 @@
 var React = require('react');
 var cx = require('react/lib/cx');
 var cloneWithProps = require('react/lib/cloneWithProps');
+var getFlexItemClassNames = require('./getFlexItemClassNames');
 
 require('./styles.css');
 
@@ -26,12 +27,9 @@ class Layout {
     });
 
     var children = React.Children.map(this.props.children, (child, i) => {
-    	var newProps = {
-    		className: cx({
-	    		'flex': child.props.flex
-	    	})
-    	};
-    	
+    	var className = getFlexItemClassNames(child.props);
+    	var newProps = { className };
+
     	if (child.key) { newProps.key = child.key }
     	if (child.ref) { newProps.ref = child.ref }
 

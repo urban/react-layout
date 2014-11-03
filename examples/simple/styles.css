@@ -22,16 +22,16 @@ fieldset > div {
 	margin: 1em;
 }
 
-.demo > .react-layout {
+.react-layout {
   background-color: #ccc;
   padding: 0.5em;
   margin: 1em;
 }
 
-.demo > .react-layout > div {
+.react-layout > div {
   background-color: white;
   padding: 1em;
   margin: 0.5em;
 }
 
-.demo.vertical > .react-layout { height: 250px; }
+.vertical .react-layout { height: 250px; }

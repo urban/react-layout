@@ -1,6 +1,6 @@
 'use strict';
 
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: './index.jsx',
@@ -16,7 +16,7 @@ module.exports = {
       },
       { 
         test: /\.css$/, 
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader") 
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
       },
       {
         test: /\.(otf|eot|svg|ttf|woff)/,
@@ -25,7 +25,7 @@ module.exports = {
     ]
   },
   plugins: [
-      new ExtractTextPlugin("bundle.css")
+      new ExtractTextPlugin('bundle.css')
   ],
   resolve: {
     alias: {
