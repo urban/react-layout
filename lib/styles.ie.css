@@ -1,0 +1,14 @@
+.react-layout:before,
+.react-layout:after {
+  content: ' ';
+  display: table;
+}
+
+.react-layout:after { clear: both; }
+
+.react-layout.horizontal > * {
+  display: table-cell;
+  float: left;
+}
+
+.react-layout > .flex { width: auto; }

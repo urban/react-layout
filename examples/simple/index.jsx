@@ -6,7 +6,6 @@ require('./styles.css');
 var React = require('react');
 var Layout = require('../../lib/index.jsx');
 
-
 class Application {
 
   render() {
