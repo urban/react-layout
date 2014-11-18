@@ -2,14 +2,39 @@
   "name": "react-layout",
   "version": "0.0.1",
   "description": "Declarative flexbox layouts in React",
+  "author": "Urban Faubion <urban.faubion@gmail.com>",
+  "license": "ISC",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack -d"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/urban/react-layout.git"
+  },
+  "homepage": "https://github.com/urban/react-layout",
+  "bugs": {
+    "url": "https://github.com/urban/react-layout/issues"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack -d",
+    "dev-examples": "webpack-dev-server --inline --content-base examples/"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "0.12.x"
+  },
+  "devDependencies": {
+    "css-loader": "^0.9.0",
+    "file-loader": "^0.8.1",
+    "jsx-loader": "^0.12.0",
+    "normalize.css": "^3.0.2",
+    "react-tools": "^0.12.0",
+    "style-loader": "^0.8.1",
+    "url-loader": "^0.5.5",
+    "webpack": "^1.4.13",
+    "webpack-dev-server": "^1.6.5"
   },
   "keywords": [
     "react",
@@ -17,25 +42,5 @@
     "react-component",
     "widgets",
     "flexbox"
-  ],
-  "author": "Urban Faubion <urban.faubion@gmail.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/urban/react-layout/issues"
-  },
-  "homepage": "https://github.com/urban/react-layout",
-  "dependencies": {},
-  "devDependencies": {
-    "css-loader": "^0.9.0",
-    "extract-text-webpack-plugin": "^0.3.3",
-    "file-loader": "^0.8.1",
-    "jsx-loader": "^0.12.0",
-    "react-tools": "^0.12.0",
-    "style-loader": "^0.8.1",
-    "url-loader": "^0.5.5",
-    "webpack": "^1.4.10"
-  },
-  "peerDependencies": {
-    "react": "^0.12.0"
-  }
+  ]
 }

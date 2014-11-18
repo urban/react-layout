@@ -4,7 +4,7 @@ require('normalize.css/normalize.css');
 require('./styles.css');
 
 var React = require('react');
-var Layout = require('../../lib/index.jsx');
+var Layout = require('react-layout');
 
 class Application {
 
