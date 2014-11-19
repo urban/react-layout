@@ -5,7 +5,6 @@
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var EXAMPLES_DIR = path.resolve(__dirname, 'examples');
 
@@ -42,21 +41,21 @@ module.exports = {
 
   module: {
     loaders: [
-      { 
-        test: /\.(js|jsx)$/, 
+      {
+        test: /\.(js|jsx)$/,
         loader: 'jsx-loader?harmony'
       },
-      { 
-        test: /\.css$/, 
+      {
+        test: /\.css$/,
         loader: 'style-loader!css-loader'
       },
       {
-        test: /\.(png|jpg)$/, 
+        test: /\.(png|jpg)$/,
         loader: 'url-loader?limit=8192' // inline base64 URLs for <=8k images, direct URLs for the rest
-      } 
+      }
     ]
   },
-  
+
   resolve: {
     alias: {
       'react-layout': '../../lib/index'
@@ -68,7 +67,7 @@ module.exports = {
     { 'react': 'React' }
   ],
 
-  devtool: "sourcemap",  
+  devtool: "sourcemap",
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('shared.js')

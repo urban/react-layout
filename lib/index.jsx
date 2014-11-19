@@ -4,8 +4,15 @@ var React = require('react');
 var cx = require('react/lib/cx');
 var cloneWithProps = require('react/lib/cloneWithProps');
 var getFlexItemClassNames = require('./getFlexItemClassNames');
+var { testStyleProp } = require('./utils');
 
-require('./styles.css');
+var hasFlexboxSupport = testStyleProp('flexWrap', 'wrap');
+
+if (hasFlexboxSupport) {
+  require('./styles.css');
+} else {
+  require('./styles.ie.css');
+}
 
 class Layout {
 
