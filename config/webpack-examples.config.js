@@ -19,7 +19,7 @@ module.exports = require('./make-webpack-config')({
   },
 
   alias: {
-    'react-layout': '../../lib/index'
+    'react-layout': '../../lib/Layout'
   },
 
   plugins: [

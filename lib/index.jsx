@@ -1,8 +1,8 @@
 'use strict';
 
-var React = require('react');
-var cx = require('react/lib/cx');
-var cloneWithProps = require('react/lib/cloneWithProps');
+var React = require('react/addons');
+var classSet = React.addons.classSet;
+var cloneWithProps = React.addons.cloneWithProps;
 var getFlexItemClassNames = require('./getFlexItemClassNames');
 var hasStyleProp = require('./hasStyleProp');
 
@@ -27,7 +27,7 @@ class Layout {
   render() {
     var component = React.createElement.bind(null, this.props.tag);
 
-    var className = cx({
+    var className = classSet({
     	'react-layout': true,
     	'horizontal': this.props.horizontal,
     	'vertical': this.props.vertical

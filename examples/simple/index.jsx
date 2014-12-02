@@ -5,6 +5,29 @@ require('./styles.css');
 
 var React = require('react');
 var Layout = require('react-layout');
+Object.assign = require('object-assign');
+
+var styles = {
+  block: {
+    backgroundColor: 'white',
+    padding: '1em',
+    margin: '0.5em'
+  }
+}
+
+class Block {
+  render() {
+    var style = styles.block;
+    if (this.props.style) {
+      Object.assign(style, this.props.style);
+    }
+    return (
+      <div style={style}>{this.props.children}</div>
+    );
+  }
+}
+
+var BlockTag = React.createClass(Block.prototype);
 
 class Application {
 

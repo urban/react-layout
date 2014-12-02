@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>React Layout</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/react-with-addons.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.12.1/JSXTransformer.js" type="text/javascript"></script>
+  <style>
+    body {
+      font-size: 14px;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    fieldset {
+      border: 1px solid #ccc;
+      margin-bottom: 2rem;
+    }
+
+    fieldset legend {
+      background: #fff;
+      border: 1px solid;
+      color: #333;
+      font-weight: normal;
+      padding: 0 4px;
+    }
+
+    fieldset > div {
+      background-color: #ccc;
+      margin: 1em;
+    }
+
+    .react-layout {
+      background-color: #ccc;
+      padding: 0.5em;
+      margin: 1em;
+    }
+
+    .react-layout > div {
+      background-color: white;
+      padding: 1em;
+      margin: 0.5em;
+    }
+
+    .vertical .react-layout { height: 250px; }
+  </style>
+</head>
+<body>
+
+  <h1>React Layout</h1>
+
+  <div id="react"></div>
+
+  <script src="./react-layout.min.js" type="text/javascript"></script>
+  <script type="text/jsx">
+
+    var ApplicationTag = React.createClass({
+
+      render: function() {
+        return (
+          <div>
+            <fieldset>
+              <legend>Horizontal</legend>
+
+              <Layout horizontal>
+                <div>One</div>
+                <div flex>Two</div>
+                <div>Three</div>
+              </Layout>
+
+            </fieldset>
+
+            <fieldset className="vertical">
+              <legend>Vertical</legend>
+
+              <Layout vertical>
+                <div>One</div>
+                <div flex>Two</div>
+                <div>Three</div>
+              </Layout>
+
+            </fieldset>
+
+            <fieldset>
+              <legend>Size</legend>
+
+              <Layout horizontal layout>
+                <div flex three>three</div>
+                <div flex>one</div>
+                <div flex two>two</div>
+              </Layout>
+            </fieldset>
+
+            <fieldset>
+              <legend>Self order</legend>
+
+              <Layout horizontal layout>
+                <div flex self-two>1: self-two</div>
+                <div flex self-four>2: self-four</div>
+                <div flex self-three>3: self-three</div>
+                <div flex self-one>4: self-one</div>
+              </Layout>
+
+              <Layout horizontal layout>
+                <div flex self-three>1: self-three</div>
+                <div flex>2: undefined</div>
+                <div flex>3: undefined</div>
+                <div flex self-one>4: self-one</div>
+              </Layout>
+            </fieldset>
+          </div>
+        );
+      }
+    });
+
+    React.render(
+      <ApplicationTag />,
+      document.getElementById('react')
+    );
+    </script>
+</body>
+</html>
