@@ -1,10 +1,19 @@
 'use strict';
 
 var React = require('react/addons');
+var joinClasses = require('react/lib/joinClasses');
+var mapObject = require('react/lib/mapObject');
 var cloneWithProps = React.addons.cloneWithProps;
 var orderElements = require('./orderElements');
-var getDimensions = require('./getDimensions');
+
 var getAvailableSpace = require('./getAvailableSpace');
+var getConsumedSpace = require('./getConsumedSpace');
+var getNegativeSpace = require('./getNegativeSpace');
+
+var measure = require('./measure');
+var flex = require('./flex');
+var align = require('./align');
+
 Object.assign = require('object-assign');
 
 var styles = {
@@ -17,81 +26,119 @@ var styles = {
   vertical: {
 
   },
-  box: {
+  resolved: {
     display: 'table-cell',
-    position: 'absolute'
+    float: 'left'
   },
   unresolved: {
+    display: 'table-cell',
+    float: 'left',
     opacity: 0,
-    overflow: 'hidden',
-    position: 'absolute'
+    overflow: 'hidden'
   }
 };
 
 class Layout {
 
   getDefaultProps() {
-    return {
-      tag: 'div'
-    }
-  }
-
-  getInitialState() {
-    return {
-      resolved: false
-    };
-  }
-
-  componentWillMount() {
-    this.preRender();
+    return { tag: 'div' }
   }
 
   componentDidMount() {
-    this.setState({ resolved: true });
-  }
-
-  preRender() {
-    var children = this.props.children;
-    if (Array.isArray(children)) {
-      this.props.children = orderElements(children);
-    }
+    this.forceUpdate();
   }
 
   render() {
+    var { tag, className, horizontal: isHorizontal } = this.props;
+    var children = !this.isMounted() ? this.preRenderChildren() : this.renderChildren();
 
-    var component = React.createElement.bind(null, this.props.tag);
-    var isResolved = this.state.resolved;
+    var props = {
+      className: joinClasses(className, 'react-layout'),
+      style: Object.assign({}, styles.base)
+    };
 
-    var children = this.props.children
-      .map(mapExtraProps)
-      .map(isResolved ? mapResolved : mapUnresolved)
-      .map(mapClone);
+    if (this.isMounted()) {
+      var dimensionMaxes = Object.keys(this.refs)
+        .map( key => {
+          var node = this.refs[key].getDOMNode();
+          return measure(node);
+        })
+        .reduce(function (prev, curr) {
+          return {
+            height: Math.max(prev.height, curr.fullHeight),
+            width: Math.max(prev.width, curr.fullWidth)
+          };
+        });
 
-    return component({ className: 'react-layout' }, children);
+      var container = measure(this.getDOMNode());
+      if (isHorizontal) {
+        props.style.height = dimensionMaxes.height + container.marginBottom;
+      }
+    }
+
+    children = children
+      .map(function ({ child, newProps }, i) {
+        newProps.key = 'key' + i;
+        newProps.ref = 'box' + i;
+        return cloneWithProps(child, newProps);
+      });
+
+    var component = React.createElement.bind(null, tag);
+    return component(props, children);
+  }
+
+  preRenderChildren() {
+    var { tag, className, children } = this.props;
+    return children
+      .map( (child, i) => {
+        var newProps = {
+          style: styles.unresolved
+        };
+        return { child, newProps };
+      });
+  }
+
+  renderChildren() {
+    var { tag, children, className, ...other } = this.props;
+    var { horizontal: isHorizontal } = other;
+
+    var node = this.getDOMNode();
+    var childObjects = children
+      .map( (child, i) => {
+        return {
+          child,
+          node: this.refs['box' + i].getDOMNode(),
+          style: Object.assign({}, styles.resolved)
+        };
+      });
+
+    var containedSpace = getAvailableSpace(node);
+    var consumedSpace = childObjects
+      .map(getConsumedSpace)
+      .reduce(sumDimensions, { width: 0, height: 0 });
+    var negativeSpace = getNegativeSpace(containedSpace, consumedSpace);
+
+    flex(childObjects, negativeSpace, isHorizontal);
+    align(childObjects, containedSpace, isHorizontal);
+
+    children = children
+      .map(function (child, i) {
+        var newProps = {
+          style: childObjects[i].style
+        };
+        return { child, newProps };
+      });
+
+    return children;
   }
 }
 
+
 module.exports = React.createClass(Layout.prototype);
 
-function mapExtraProps(element, i) {
-  var props = Object.assign({
-    style: {}
-  }, element.props);
-  if (element.key) { props.key = element.key }
-  if (element.ref) { props.ref = element.ref }
-  return { element, props };
-}
-
-function mapUnresolved(clone, i) {
-  Object.assign(clone.props.style, styles.unresolved);
-  return clone;
-}
-
-function mapResolved(clone, i) {
-  clone.props.style = styles.box;
-  return clone;
-}
-
-function mapClone(clone, i) {
-  return cloneWithProps(clone.element, clone.props);
+function sumDimensions(prev, curr) {
+  return {
+    height: prev.height + curr.height,
+    width: prev.width + curr.width
+  }
 }
