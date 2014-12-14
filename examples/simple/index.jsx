@@ -24,17 +24,29 @@ var horizontalTest = (
 
     <Layout horizontal>
       <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+    </Layout>
+
+    <Layout horizontal>
+      <div>One</div>
       <div flex>Two</div>
       <div>Three</div>
+    </Layout>
+
+    <Layout horizontal>
+      <div flex>One</div>
+      <div flex>Two</div>
+      <div flex>Three</div>
     </Layout>
 
   </fieldset>
 );
 
 var verticalTest = (
-  <fieldset style={ styles.vertical }>
+  <fieldset>
     <legend>Vertical</legend>
-    <Layout vertical>
+    <Layout vertical style={ styles.vertical }>
       <div>One</div>
       <div flex>Two</div>
       <div>Three</div>
@@ -80,6 +92,7 @@ class Application {
     return (
       <div>
         { horizontalTest }
+        { verticalTest }
       </div>
     );
   }
