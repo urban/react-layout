@@ -23,6 +23,16 @@ var dim = {
   column: 'height'
 };
 
+var leading = {
+  row: 'left',
+  column: 'top'
+};
+
+var trailing = {
+  row: 'right',
+  column: 'bottom'
+};
+
 class Layout {
 
   getDefaultProps() {
@@ -34,26 +44,49 @@ class Layout {
   }
 
   render() {
-    var { tag, className, children, style } = this.props;
-    style = style || {};
+    var { tag, className, children, style, horizontal } = this.props;
+    var mainAxis = horizontal ? 'row' : 'column';
+    var crossAxis = horizontal ? 'column' : 'row';
     var newProps = {
       className: joinClasses(className, 'react-layout'),
       style: { ...style, ...styles.layout }
     };
 
     var refs = this.refs;
-    var childObjects = [];
     if (this.isMounted()) {
-      childObjects = this.layoutContent();
-      var dimensionMaxes = childObjects
-        .reduce(function (prev, { layout }) {
-          return {
-            height: Math.max(prev.height, layout.heightWithMargins),
-            width: Math.max(prev.width, layout.widthWithMargins)
-          }
-        }, { height: 0, width: 0 });
       var container = getDimensions(this.getDOMNode());
-      newProps.style.height = style.hasOwnProperty('height') ? style.height : dimensionMaxes.height + container.marginBottom;
+      var childObjects = this.layoutContent();
+
+      var mainAxisDim = container.getPadding(leading[mainAxis]) +
+        container.getPadding(trailing[mainAxis]);
+      var crossAxisDim = 0;
+
+      childObjects
+        .forEach(function ({ layout }) {
+          // sum the main axis
+          mainAxisDim += layout[dim[mainAxis] + 'WithMargins'];
+          // determin the largest child
+          crossAxisDim = max(
+            crossAxisDim,
+            layout[dim[crossAxis] + 'WithMargins']
+          );
+        });
+
+      // main axis the size of the container or the size of the content
+      mainAxisDim = max(mainAxisDim, container[dim[mainAxis]]);
+      // add container padding to cross axis dimension
+      crossAxisDim += container.getPadding(leading[crossAxis]) +
+        container.getPadding(trailing[crossAxis]);
+
+      newProps.style[dim[mainAxis]] = max(
+        newProps.style[dim[mainAxis]],
+        mainAxisDim
+      );
+
+      newProps.style[dim[crossAxis]] = max(
+        newProps.style[dim[crossAxis]],
+        crossAxisDim
+      );
     }
 
     children = children
@@ -103,3 +136,14 @@ class Layout {
 }
 
 module.exports = React.createClass(Layout.prototype);
+
+function max(a, b) {
+  if (a > b) {
+    return a;
+  }
+  return b;
+}
+
+function hasProp(obj, str) {
+  return obj.hasOwnProperty(str);
+}

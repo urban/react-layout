@@ -46,11 +46,25 @@ var horizontalTest = (
 var verticalTest = (
   <fieldset>
     <legend>Vertical</legend>
+
+    <Layout vertical>
+      <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+    </Layout>
+
     <Layout vertical style={ styles.vertical }>
       <div>One</div>
       <div flex>Two</div>
       <div>Three</div>
     </Layout>
+
+    <Layout vertical style={ styles.vertical }>
+      <div flex>One</div>
+      <div flex>Two</div>
+      <div flex>Three</div>
+    </Layout>
+
   </fieldset>
 );
 
