@@ -1,10 +1,12 @@
 'use strict';
 
 var fs = require('fs');
-var path = require('path');
+var resolve = require('path').resolve;
+var join = require('path').join;
+var exists = require('fs').existsSync;
 var webpack = require('webpack');
 
-var EXAMPLES_DIR = path.resolve(__dirname, '../examples');
+var EXAMPLES_DIR = resolve(__dirname, '../examples');
 var BUILD_DIR = 'build';
 
 module.exports = require('./make-webpack-config')({
@@ -14,7 +16,7 @@ module.exports = require('./make-webpack-config')({
   output: {
     filename: '[name].js',
     chunkFilename: '[id].chunk.js',
-    path: path.join(EXAMPLES_DIR,  BUILD_DIR),
+    path: join(EXAMPLES_DIR,  BUILD_DIR),
     publicPath: '/' + BUILD_DIR + '/'
   },
 
@@ -33,9 +35,9 @@ function entriesArray() {
 
 function entriesSum(entries, dir) {
   var isBuildDir = dir === BUILD_DIR;
-
-  if (!isBuildDir && isDirectory(path.join(EXAMPLES_DIR, dir))) {
-    entries[dir] = path.join(EXAMPLES_DIR, dir, 'index.jsx');
+  var file = join(EXAMPLES_DIR, dir, 'index.jsx');
+  if (!isBuildDir && isDirectory(join(EXAMPLES_DIR, dir)) && exists(file)) {
+    entries[dir] = file;
   }
   return entries;
 }
