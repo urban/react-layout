@@ -2,21 +2,16 @@
 
 var React = require('react/addons');
 var joinClasses = require('react/lib/joinClasses');
-var mapObject = require('react/lib/mapObject');
-var cloneWithProps = React.addons.cloneWithProps;
-
-var getAvailableSpace = require('./getAvailableSpace');
-var getConsumedSpace = require('./getConsumedSpace');
-var getNegativeSpace = require('./getNegativeSpace');
 
 var styles = require('./styles');
 
 var getDimensions = require('./getDimensions');
-var sumDimensions = require('./sumDimensions');
 var order = require('./order');
 var flex = require('./flex');
 var align = require('./align');
 var position = require('./position');
+
+var LayoutItem = require('./LayoutItem');
 
 var dim = {
   row: 'width',
@@ -33,6 +28,8 @@ var trailing = {
   column: 'bottom'
 };
 
+var count = 0;
+
 class Layout {
 
   getDefaultProps() {
@@ -43,34 +40,41 @@ class Layout {
     this.forceUpdate();
   }
 
+  componentDidUpdate() {
+    if (this.shouldUpdateLayout()) {
+      console.log('UPDATE /////////////////');
+      this.forceUpdate();
+    }
+  }
+
+  shouldUpdateLayout() {
+    var mainAxis = this.getMainAxis();
+    var content = this.getContent();
+    var [mainAxisDim, crossAxisDim] = this.getContentDimensions(content);
+    var availableSpace = this.getAvailableSpace(mainAxis);
+    return mainAxisDim > availableSpace;
+  }
+
   render() {
-    var { tag, className, children, style, horizontal } = this.props;
-    var mainAxis = horizontal ? 'row' : 'column';
-    var crossAxis = horizontal ? 'column' : 'row';
+    var { tag, className, children, style } = this.props;
+
+    var mainAxis = this.getMainAxis();
+    var crossAxis = this.getCrossAxis();
+
     var newProps = {
       className: joinClasses(className, 'react-layout'),
-      style: { ...style, ...styles.layout }
+      style: { ...style, ...styles.layout, ...styles[mainAxis] }
     };
 
     var refs = this.refs;
     if (this.isMounted()) {
       var container = getDimensions(this.getDOMNode());
-      var childObjects = this.layoutContent();
+      var content = this.layoutContent();
 
-      var mainAxisDim = container.getPadding(leading[mainAxis]) +
+      var [ mainAxisDim, crossAxisDim ] = this.getContentDimensions(content);
+
+      mainAxisDim += container.getPadding(leading[mainAxis]) +
         container.getPadding(trailing[mainAxis]);
-      var crossAxisDim = 0;
-
-      childObjects
-        .forEach(function ({ layout }) {
-          // sum the main axis
-          mainAxisDim += layout[dim[mainAxis] + 'WithMargins'];
-          // determin the largest child
-          crossAxisDim = max(
-            crossAxisDim,
-            layout[dim[crossAxis] + 'WithMargins']
-          );
-        });
 
       // main axis the size of the container or the size of the content
       mainAxisDim = max(mainAxisDim, container[dim[mainAxis]]);
@@ -78,15 +82,10 @@ class Layout {
       crossAxisDim += container.getPadding(leading[crossAxis]) +
         container.getPadding(trailing[crossAxis]);
 
-      newProps.style[dim[mainAxis]] = max(
-        newProps.style[dim[mainAxis]],
-        mainAxisDim
-      );
-
-      newProps.style[dim[crossAxis]] = max(
-        newProps.style[dim[crossAxis]],
-        crossAxisDim
-      );
+      crossAxisDim = max(crossAxisDim, container[dim[crossAxis]]);
+      // set the container demensions
+      newProps.style[dim[mainAxis]] = mainAxisDim;
+      newProps.style[dim[crossAxis]] = crossAxisDim;
     }
 
     children = children
@@ -94,45 +93,98 @@ class Layout {
         var newProps = {
           key: child.props.key || 'key' + i,
           ref: 'box' + i,
-          style: this.isMounted() ? childObjects[i].style : styles.unresolved
+          style: this.isMounted() ? content[i].style : {}
         };
-        return cloneWithProps(child, newProps);
+        return LayoutItem(newProps, child);
       });
 
     var component = React.createElement.bind(null, tag);
     return component(newProps, children);
   }
 
-  layoutContent() {
-    var { tag, children, className, horizontal } = this.props;
+  getContent() {
+    var { children } = this.props;
+    var refs = this.refs;
+    return children
+      .map(function (child, i) {
+        return {
+          ref: refs['box' + i],
+          child,
+          style: { }
+        };
+      });
+  }
 
-    var mainAxis = horizontal ? 'row' : 'column';
-    var crossAxis = horizontal ? 'column' : 'row';
+  layoutContent() {
+    var { tag, children, className } = this.props;
+
+    var mainAxis = this.getMainAxis();
+    var crossAxis = this.getCrossAxis();
 
     var node = this.getDOMNode();
     var refs = this.refs;
-    var childObjects = children
-      .map(function (child, i) {
-        var node = refs['box' + i].getDOMNode();
-        return {
-          child,
-          layout: getDimensions(node),
-          style: { ...styles.resolved }
-        };
+    var content = this.getContent();
+
+    var containedSpace = this.getAvailableSpace(mainAxis);
+    var consumedSpace = content
+      .reduce(function (prev, curr) {
+        return prev + curr.ref.getConsumedSpace(mainAxis);
+      }, 0);
+
+    var negativeSpace = containedSpace - consumedSpace;
+
+    flex(content, negativeSpace, dim[mainAxis]);
+    align(content, containedSpace, mainAxis);
+    position(content, mainAxis, crossAxis);
+
+    return content;
+  }
+
+  isHorizontal() {
+    return !this.props.hasOwnProperty('vertical');
+  }
+
+  getMainAxis() {
+    return this.isHorizontal() ? 'row' : 'column';
+  }
+
+  getCrossAxis() {
+    return this.isHorizontal() ? 'column' : 'row';
+  }
+
+  getDimensions() {
+    var node = this.getDOMNode();
+    return getDimensions(node);
+  }
+
+  getAvailableSpace(axis) {
+    var layout = this.getDimensions();
+    return layout[dim[axis]]
+      - layout.leadingPadding(axis)
+      - layout.trailingPadding(axis);
+  }
+
+  getContentDimensions(content) {
+    var mainAxis = this.getMainAxis();
+    var crossAxis = this.getCrossAxis();
+    var mainAxisDim = 0;
+    var crossAxisDim = 0;
+
+    content
+      .forEach(function ({ ref }) {
+        var layout = ref.getDimensions();
+        // sum the main axis
+        mainAxisDim += layout[dim[mainAxis] + 'WithMargins'];
+        // determin the largest child
+        crossAxisDim = max(
+          crossAxisDim,
+          layout[dim[crossAxis] + 'WithMargins']
+        );
       });
 
-    var containedSpace = getAvailableSpace(node);
-    var consumedSpace = childObjects
-      .map(getConsumedSpace)
-      .reduce(sumDimensions);
-    var negativeSpace = getNegativeSpace(containedSpace, consumedSpace);
-
-    flex(childObjects, negativeSpace[dim[mainAxis]], dim[mainAxis]);
-    align(childObjects, containedSpace[dim[mainAxis]], mainAxis);
-    position(childObjects, mainAxis, crossAxis);
-
-    return childObjects;
+    return [mainAxisDim, crossAxisDim];
   }
+
 }
 
 module.exports = React.createClass(Layout.prototype);
@@ -142,8 +194,4 @@ function max(a, b) {
     return a;
   }
   return b;
-}
-
-function hasProp(obj, str) {
-  return obj.hasOwnProperty(str);
 }
