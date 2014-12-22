@@ -1,0 +1,66 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html [flex] { flex: 1; }
+
+html [flex][auto] { flex: 1 1 auto; }
+
+html [flex][none] { flex: none; }
+
+html [flex][one] { flex: 1; }
+html [flex][two] { flex: 2; }
+html [flex][three] { flex: 3; }
+html [flex][four] { flex: 4; }
+html [flex][five] { flex: 5; }
+html [flex][six] { flex: 6; }
+html [flex][seven] { flex: 7; }
+html [flex][eight] { flex: 8; }
+html [flex][nine] { flex: 9; }
+html [flex][ten] { flex: 10; }
+html [flex][eleven] { flex: 11; }
+html [flex][twelve] { flex: 12; }
+
+html [layout][horizontal],
+html [layout][vertical] {
+  display: flex;
+}
+
+html [layout][horizontal] { flex-direction: row; }
+html [layout][horizontal][reverse] { flex-direction: row-reverse; }
+
+html [layout][vertical] { flex-direction: column; }
+html [layout][vertical][reverse] { flex-direction: column-reverse; }
+
+html [layout][wrap] { flex-wrap: wrap; }
+html [layout][wrap-reverse] { flex-wrap: wrap-reverse; }
+
+html [layout][start] { align-items: flex-start; }
+html [layout][center] { align-items: center; }
+html [layout][end] { align-items: flex-end; }
+
+html [layout][start-justified] { justify-content: flex-start; }
+html [layout][center-justified] { justify-content: center; }
+html [layout][end-justified] { justify-content: flex-end; }
+html [layout][around-justified] { justify-content: space-around; }
+html [layout][justified] { justify-content: space-between; }
+
+html [self-start] { align-self: flex-start; }
+html [self-center] { align-self: center; }
+html [self-end] { align-self: flex-end; }
+html [self-stretch] { align-self: stretch; }
+
+html [self-one] { order: 1; }
+html [self-two] { order: 2; }
+html [self-three] { order: 3; }
+html [self-four] { order: 4; }
+html [self-five] { order: 5; }
+html [self-six] { order: 6; }
+html [self-seven] { order: 7; }
+html [self-eight] { order: 8; }
+html [self-nine] { order: 9; }
+html [self-ten] { order: 10; }
+html [self-eleven] { order: 11; }
+html [self-twelve] { order: 12; }
+
+

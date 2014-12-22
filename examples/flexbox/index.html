@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flexbox Example</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <link href="../global.css" rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
+  <style>
+    [layout] {
+      background-color: #ccc;
+      padding: 0.5em;
+      margin: 1em;
+    }
+
+    [layout] > div {
+      border: 1px solid gray;
+      background-color: white;
+      padding: 1em;
+      margin: 0.5em;
+    }
+
+    .tall {
+      height: 250px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Layout Example: Flexbox</h1>
+
+  <fieldset>
+    <legend>Horizontal</legend>
+
+    <div horizontal layout>
+      <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+    </div>
+
+    <div horizontal layout>
+      <div>One</div>
+      <div flex>Two</div>
+      <div>Three</div>
+    </div>
+
+    <div horizontal layout>
+      <div flex>One</div>
+      <div flex>Two</div>
+      <div flex>Three</div>
+    </div>
+
+    <div horizontal layout>
+      <div flex>One</div>
+      <div flex none>Two</div>
+      <div flex>Three</div>
+    </div>
+
+  </fieldset>
+
+  <fieldset>
+    <legend>Vertical</legend>
+
+    <div vertical layout>
+      <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+    </div>
+
+    <div vertical layout class="tall">
+      <div>One</div>
+      <div flex>Two</div>
+      <div>Three</div>
+    </div>
+
+    <div vertical layout class="tall">
+      <div flex>One</div>
+      <div flex>Two</div>
+      <div flex>Three</div>
+    </div>
+
+  </fieldset>
+
+  <fieldset>
+    <legend>Size</legend>
+
+    <div horizontal layout class="demo">
+      <div flex three>three</div>
+      <div flex>one</div>
+      <div flex two>two</div>
+    </div>
+
+    <div vertical layout class="demo tall">
+      <div flex three>three</div>
+      <div flex>one</div>
+      <div flex two>two</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Align</legend>
+
+    <div horizontal layout class="demo tall">
+      <div>stretch (default)</div>
+      <div style={{height: 100 }}>stretch (default)</div>
+    </div>
+
+    <div vertical layout class="demo tall">
+      <div>stretch (default) </div>
+      <div>stretch (default) </div>
+    </div>
+
+    <div horizontal layout start class="demo tall">
+      <div>start</div>
+      <div>start</div>
+    </div>
+
+    <div vertical layout start class="demo tall">
+      <div>start</div>
+      <div>start</div>
+    </div>
+
+    <div horizontal layout center class="demo tall">
+      <div>center</div>
+      <div>center</div>
+    </div>
+
+    <div vertical layout center class="demo tall">
+      <div>center</div>
+      <div>center</div>
+    </div>
+
+    <div horizontal layout end class="demo tall">
+      <div>end</div>
+      <div>end</div>
+    </div>
+
+    <div vertical layout end class="demo tall">
+      <div>end</div>
+      <div>end</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Self align</legend>
+
+    <div horizontal layout class="demo tall">
+      <div flex self-start>self-start</div>
+      <div flex self-center>self-center</div>
+      <div flex self-end>self-end</div>
+      <div flex self-stretch>start-stretch</div>
+    </div>
+
+    <div vertical layout class="demo tall">
+      <div flex self-start>self-start</div>
+      <div flex self-center>self-center</div>
+      <div flex self-end>self-end</div>
+      <div flex self-stretch>start-stretch</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Justification</legend>
+
+    <div horizontal layout start-justified class="demo">
+      <div>start-justified</div>
+      <div>start-justified</div>
+      <div>start-justified</div>
+    </div>
+
+    <div horizontal layout center-justified class="demo">
+      <div>center-justified</div>
+      <div>center-justified</div>
+      <div>center-justified</div>
+    </div>
+
+    <div horizontal layout end-justified class="demo">
+      <div>end-justified</div>
+      <div>end-justified</div>
+      <div>end-justified</div>
+    </div>
+
+    <div horizontal layout justified class="demo">
+      <div>justified</div>
+      <div>justified</div>
+      <div>justified</div>
+    </div>
+
+    <div horizontal layout around-justified class="demo">
+      <div>around-justified</div>
+      <div>around-justified</div>
+      <div>around-justified</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Self align (not supported)</legend>
+
+    <div horizontal layout class="demo tall">
+      <div flex self-start>self-start</div>
+      <div flex self-center>self-center</div>
+      <div flex self-end>self-end</div>
+      <div flex self-stretch>start-stretch</div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Self order</legend>
+
+    <div horizontal layout class="demo">
+      <div flex self-two>1: self-two</div>
+      <div flex self-four>2: self-four</div>
+      <div flex self-three>3: self-three</div>
+      <div flex self-one>4: self-one</div>
+    </div>
+
+    <div horizontal layout class="demo">
+      <div flex self-three>1: self-three</div>
+      <div flex>2: undefined</div>
+      <div flex>3: undefined</div>
+      <div flex self-one>4: self-one</div>
+    </div>
+
+    <div vertical layout class="demo">
+      <div flex self-two>1: self-two</div>
+      <div flex self-four>2: self-four</div>
+      <div flex self-three>3: self-three</div>
+      <div flex self-one>4: self-one</div>
+    </div>
+
+    <div vertical layout class="demo">
+      <div flex self-three>1: self-three</div>
+      <div flex>2: undefined</div>
+      <div flex>3: undefined</div>
+      <div flex self-one>4: self-one</div>
+    </div>
+  </fieldset>
+</body>
+</html>

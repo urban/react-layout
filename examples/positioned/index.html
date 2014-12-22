@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Positioned Example</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <link href="../global.css" rel="stylesheet">
+  <style>
+    .layout {
+      background-color: #ccc;
+      height: 100px;
+      padding: 5px;
+      margin: 10px;
+      position: relative;
+    }
+
+    .inner {
+      background-color: rgba(255,255,0, 0.25);
+      bottom: 0;
+      left: 0;
+      margin: 10px;
+      padding: 5px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      text-align: right;
+    }
+
+    .block {
+      background-color: rgba(255,255,255, 0.5);
+      padding: 5px;
+      position: absolute;
+      left: 10px;
+      top: 10px;
+    }
+
+    .block > div {
+      border: none;
+      background-color: rgba(0,0,255, 0.5);
+    }
+
+    .block.margined {
+      background-color: black;
+      border: none;
+      margin: 5px;
+    }
+
+    .block.bordered {
+      border: 5px solid gray;
+    }
+
+    .tall {
+      height: 250px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Positioned Example</h1>
+
+  <fieldset>
+    <legend>Positioned</legend>
+
+    <div class="layout">
+      <div class="inner">Inner</div>
+      <div class="block">
+        <div>One</div>
+      </div>
+      <div class="block margined"></div>
+    </div>
+
+    <div class="layout">
+      <div class="inner">Inner</div>
+      <div class="block bordered">
+        <div>One</div>
+      </div>
+      <div class="block margined"></div>
+    </div>
+
+  </fieldset>
+</body>
+</html>

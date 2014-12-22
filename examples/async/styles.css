@@ -1,0 +1,12 @@
+.react-layout {
+  background-color: #ccc;
+  padding: 0.5em;
+  margin: 1em;
+}
+
+.react-layout > div {
+  border: 1px solid gray;
+  background-color: white;
+  padding: 1em;
+  margin: 0.5em;
+}

@@ -118,11 +118,7 @@ class Layout {
   layoutContent() {
     var { tag, children, className } = this.props;
 
-    var mainAxis = this.getMainAxis();
-    var crossAxis = this.getCrossAxis();
-
-    var node = this.getDOMNode();
-    var refs = this.refs;
+    var [mainAxis, crossAxis] = this.getAxis();
     var content = this.getContent();
 
     var containedSpace = this.getAvailableSpace(mainAxis);
@@ -142,6 +138,10 @@ class Layout {
 
   isHorizontal() {
     return !this.props.hasOwnProperty('vertical');
+  }
+
+  getAxis() {
+    return [this.getMainAxis(), this.getCrossAxis()];
   }
 
   getMainAxis() {
@@ -165,8 +165,7 @@ class Layout {
   }
 
   getContentDimensions(content) {
-    var mainAxis = this.getMainAxis();
-    var crossAxis = this.getCrossAxis();
+    var [mainAxis, crossAxis] = this.getAxis();
     var mainAxisDim = 0;
     var crossAxisDim = 0;
 

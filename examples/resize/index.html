@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resize Example</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <link href="../global.css" rel="stylesheet">
+  <style>
+    .layout {
+      background-color: #ccc;
+      height: 100px;
+      padding: 5px;
+      margin: 10px;
+      position: relative;
+    }
+
+    .inner {
+      background-color: rgba(255,255,0, 0.25);
+      bottom: 0;
+      left: 0;
+      margin: 10px;
+      padding: 5px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      text-align: right;
+    }
+
+    .block {
+      background-color: rgba(255,255,255, 0.5);
+      padding: 5px;
+      position: absolute;
+      left: 10px;
+      top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Resize Example</h1>
+
+  <fieldset>
+    <legend>Resize</legend>
+
+    <div id="demo" class="layout">
+      <div class="inner">Inner</div>
+      <div id="block" class="block">One</div>
+    </div>
+
+    <a id="resizeTrigger" href="#" >Resize</a>
+
+  </fieldset>
+
+  <script type="text/javascript">
+    var attachEvent = document.attachEvent;
+    var isIE = navigator.userAgent.match(/Trident/);
+
+    var raf = window.requestAnimationFrame
+      || window.mozRequestAnimationFrame
+      || window.webkitRequestAnimationFrame
+      || function (callback) {
+        return window.setTimeout(callback, 20);
+      };
+
+    var requestFrame = function (callback) {
+      return raf(callback);
+    };
+
+    var cancelRaf = window.cancelAnimationFrame
+      || window.mozCancelAnimationFrame
+      || window.webkitCancelAnimationFrame
+      || window.clearTimeout;
+
+    var cancelFrame = function (id) {
+      return cancelRaf(id);
+    };
+
+    var resizeListener = function(event) {
+      var target = event.target || event.srcElement;
+      if (target._resize) {
+        cancelFrame(target.__resize);
+      }
+      target._resize = requestFrame(function () {
+        var trigger = target._resizeTrigger;
+        trigger._resizeListeners.forEach(function (fn) {
+          fn.call(trigger, event);
+        });
+      });
+    }
+
+    function objectLoad(event) {
+      console.log('onLoad');
+      this.contentDocument.defaultView._resizeTrigger = this._resizeElement;
+      this.contentDocument.defaultView.addEventListener('resize', resizeListener);
+    }
+
+    var addResizeListener = function (element, fn) {
+      if (!element._resizeListeners) {
+        element._resizeListeners = [];
+        if (attachEvent) {
+          element._resizeTrigger = element;
+          element.attachEvent('onresize', resizeListener);
+        } else {
+          if (window.getComputedStyle(element).position === 'static') {
+            element.style.position = 'relative';
+          }
+          var obj = element._resizeTrigger = document.createElement('object');
+          obj.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
+          obj._resizeElement = element;
+          obj.onload = objectLoad;
+          obj.type = 'text/html';
+          if (isIE) {
+            element.appendChild(obj);
+          }
+          obj.data = 'about:blank';
+          if (!isIE) {
+            element.appendChild(obj);
+          }
+        }
+        element._resizeListeners.push(fn);
+      }
+    }
+
+    var removeResizeListener = function (element, fn) {
+      element._resizeListeners.splice(element._resizeListeners.indexOf(fn), 1);
+      if (!element._resizeListeners.length) {
+        if (attachEvent) {
+          element.detachEvent('onresize', resizeListener);
+        } else {
+          element._resizeTrigger.contentDocument.defaultView.removeEventListener('resize', resizeListener);
+          element._resizeTrigger = !element.removeChild(element_resizeTrigger);
+        }
+      }
+    }
+  </script>
+  <script type="text/javascript">
+    var demo = document.getElementById('demo');
+    addResizeListener(demo, function () {
+      console.log('asdf');
+    });
+
+    var block = document.getElementById('block');
+    addResizeListener(block, function () {
+      console.log('block resize');
+      var width = getComputedStyle(block).width;
+      console.log(width);
+    });
+
+    document.getElementById('resizeTrigger').addEventListener('click', function (event) {
+      event.preventDefault();
+      console.log('click');
+      block.style.width = 200 + 'px';
+    })
+  </script>
+</body>
+</html>
